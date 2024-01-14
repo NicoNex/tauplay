@@ -1,0 +1,6 @@
+github.com/NicoNex/tau v1.6.4 h1:yek7FFXL4bv2j96fDMxuMeqLdksDtfx/SE28NLb8Kuc=
+github.com/NicoNex/tau v1.6.4/go.mod h1:Et9Q7xkeETpkFXC2CyPpIF33V9DG3OPrO1Oc9ttzsAg=
+golang.org/x/sys v0.0.0-20220730100132-1609e554cd39 h1:aNCnH+Fiqs7ZDTFH6oEFjIfbX2HvgQXJ6uQuUbTobjk=
+golang.org/x/sys v0.0.0-20220730100132-1609e554cd39/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+golang.org/x/term v0.0.0-20220722155259-a9ba230a4035 h1:Q5284mrmYTpACcm+eAKjKJH48BBwSyfJqmmGDTtT8Vc=
+golang.org/x/term v0.0.0-20220722155259-a9ba230a4035/go.mod h1:jbD1KX2456YbFQfuXm/mYQcufACuNUgVhRMnK/tPxf8=
