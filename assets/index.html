@@ -138,6 +138,23 @@
             const lineCount = inputText.value.split('\n').length;
             displayLineNumbers(Array.from({ length: lineCount }, (_, index) => index + 1).join('\n'))
         }
+
+        const textarea = document.getElementById('inputText');
+        textarea.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                e.preventDefault();
+                runCode();
+            } else if (e.key === 'Tab') {
+                e.preventDefault();
+                // Insert a tab character at the current cursor position
+                const start = this.selectionStart;
+                const end = this.selectionEnd;
+                const currentValue = this.value;
+                this.value = currentValue.substring(0, start) + '\t' + currentValue.substring(end);
+                this.selectionStart = this.selectionEnd = start + 1;
+                updateLineNumbers(); // Update line numbers after inserting tab
+            }
+        });
     </script>
 </body>
 </html>
