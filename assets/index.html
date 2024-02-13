@@ -162,8 +162,9 @@
             const protocol = window.location.protocol;
             const hostname = window.location.hostname;
             const port = window.location.port.length !== 0 ? `:${window.location.port}` : "";
+            const path = window.location.pathname;
             const encoded = encode(document.getElementById('inputText').value);
-            navigator.clipboard.writeText(`${protocol}//${hostname}${port}?cnt=${encoded}`)
+            navigator.clipboard.writeText(`${protocol}//${hostname}${port}${path}?cnt=${encoded}`)
                 .then(() => {
                   // Create and style the message element
                     var copyMessage = Object.assign(document.createElement("div"), {
