@@ -94,6 +94,15 @@
             color: #abb2bf;
             border-top: 1px solid #444c56;
         }
+
+        .copy-message {
+            position: absolute;
+            background-color: #4CAF50;
+            color: #ffffff;
+            padding: 8px;
+            border-radius: 4px;
+            z-index: 9999;
+        }
     </style>
 </head>
 <body>
@@ -101,6 +110,7 @@
         <nav>
             <strong id="title">The Tau Playground</strong>
             <button onclick="runCode()">Run</button>
+            <button onclick="copyURL(this)">Share</button>
         </nav>
         <hr style="width: 100%; margin: 0; border: 1px solid #444c56;">
         <div id="editorContainer">
@@ -111,6 +121,7 @@
     <div id="output"></div>
 
     <script src="wasm_exec.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lz-string@1.4.4/libs/lz-string.min.js"></script>
     <script>
         const go = new Go();
         WebAssembly.instantiateStreaming(fetch("play.wasm"), go.importObject)
@@ -124,12 +135,59 @@
         const displayOutput = useDisplay("output");
         const displayLineNumbers = useDisplay("lineNumbers");
 
+        function extractPath(path) {
+            const match = path.match(/^\/p\/([^\/]+)$/);
+            return match ? match[1] : "";
+        }
+
+        function checkShared() {
+            const data = extractPath(window.location.pathname);
+            if (data.length !== 0) {
+                document.getElementById('inputText').value = decode(data);
+            }
+        }
+
+        checkShared();
         updateLineNumbers();
+
+        const encode = (inputString) => encodeURIComponent(LZString.compressToBase64(inputString));
+        const decode = (encodedString) => LZString.decompressFromBase64(decodeURIComponent(encodedString));
 
         // Function to run the code
         function runCode() {
             const inputText = document.getElementById('inputText').value;
             displayOutput(runTau(inputText));
+        }
+
+        function copyURL(button) {
+            const protocol = window.location.protocol;
+            const hostname = window.location.hostname;
+            const port = window.location.port.length !== 0 ? `:${window.location.port}` : "";
+            const encoded = encode(document.getElementById('inputText').value);
+            navigator.clipboard.writeText(`${protocol}//${hostname}${port}/p/${encoded}`)
+                .then(() => {
+                  // Create and style the message element
+                  var copyMessage = Object.assign(document.createElement("div"), {
+                    textContent: "URL copied to clipboard!",
+                    className: "copy-message",
+                    style: `
+                      position: absolute;
+                      background-color: #4CAF50;
+                      color: #ffffff;
+                      padding: 8px;
+                      border-radius: 4px;
+                      z-index: 9999;
+                      left: ${button.getBoundingClientRect().right}px;
+                      top: ${button.getBoundingClientRect().top}px;
+                    `,
+                });
+
+      // Append the message element to the document
+      document.body.appendChild(copyMessage);
+
+      // Hide the message after 2 seconds
+      setTimeout(() => document.body.removeChild(copyMessage), 2000);
+    })
         }
 
         // Function to update line numbers
