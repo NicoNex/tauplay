@@ -101,6 +101,33 @@ func serve(port string) {
 	})
 }
 
+func tickCleanup() {
+	for range time.Tick(time.Hour) {
+		var deletable []string
+
+		err := db.Fold(func(id string, p Page, err error) error {
+			if err != nil {
+				log.Println("tickCleanup", "db.Fold", err)
+				return nil
+			}
+
+			if time.Since(p.Read) >= time.Hour*24*30 {
+				deletable = append(deletable, id)
+			}
+			return nil
+		})
+		if err != nil {
+			log.Println("tickCleanup", "db.Fold", err)
+		}
+
+		for _, id := range deletable {
+			if err := db.Del(id); err != nil {
+				log.Println("tickCleanup", "db.Del", err)
+			}
+		}
+	}
+}
+
 func initDB() {
 	cache, err := os.UserCacheDir()
 	if err != nil {
@@ -115,6 +142,7 @@ func initDB() {
 	if err != nil {
 		log.Fatalln("initDB", "katalis.Open", err)
 	}
+	go tickCleanup()
 }
 
 func main() {
