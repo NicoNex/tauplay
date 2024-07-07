@@ -134,7 +134,18 @@
 
 		const displayOutput = useDisplay("output");
 		const displayLineNumbers = useDisplay("lineNumbers");
-		const setCode = (code) => document.getElementById('inputText').value = code;
+
+		// Function to update line numbers
+		function updateLineNumbers() {
+			const inputText = document.getElementById('inputText');
+			const lineCount = inputText.value.split('\n').length;
+			displayLineNumbers(Array.from({ length: lineCount }, (_, index) => index + 1).join('\n'))
+		}
+
+		const setCode = (code) => {
+			document.getElementById('inputText').value = code;
+			updateLineNumbers();
+		}
 
 		// Returns the current address.
 		const addr = () => {
@@ -149,6 +160,7 @@
 		// Returns the share address with the given ID.
 		const addrId = (id) => addr() + `?id=${id}`
 
+		// Fetches the content from the server.
 		async function getContent(contentId) {
 			try {
 				const response = await fetch(addr() + `/p/${contentId}`);
@@ -175,11 +187,11 @@
 				if (!response.ok) {
 					throw new Error('could not save code: ' + response.statusText);
 				}
-					return response.text();  // Assuming the server returns a plain text response
+					return response.text();
 				})
 			.catch(error => {
 				console.error('could not save code:', error);
-				throw error;  // Re-throw the error to be handled by the caller
+				throw error;
 			});
 		}
 
@@ -192,13 +204,6 @@
 					getContent(params.get("id")).then(code => setCode(code));
 				}
 			}
-		}
-
-		// Function to update line numbers
-		function updateLineNumbers() {
-			const inputText = document.getElementById('inputText');
-			const lineCount = inputText.value.split('\n').length;
-			displayLineNumbers(Array.from({ length: lineCount }, (_, index) => index + 1).join('\n'))
 		}
 
 		checkShared();
@@ -264,7 +269,7 @@
 					navigator.clipboard.writeText(url)
 						.then(() => {
 							okmsg(button, "URL copied to clipboard!");
-							window.location.replace(url);
+							window.history.replaceState(null, null, url);
 						})
 						.catch(error => {
 							errmsg("An error occurred!");
