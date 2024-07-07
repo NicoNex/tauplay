@@ -1,218 +1,294 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tau Playground</title>
-    <style>
-        :root {
-            --global-line-height: 1rem;
-            --global-font-size: 1rem;
-        }
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Tau Playground</title>
+	<style>
+		:root {
+			--global-line-height: 1rem;
+			--global-font-size: 1rem;
+		}
 
-        body {
-            font-family: 'Lucida Console', Lucida, monospace;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            background-color: #282c34;
-            color: #abb2bf;
-            font-size: 16px;
-        }
+		body {
+			font-family: 'Lucida Console', Lucida, monospace;
+			margin: 0;
+			padding: 0;
+			display: flex;
+			flex-direction: column;
+			height: 100vh;
+			background-color: #282c34;
+			color: #abb2bf;
+			font-size: 16px;
+		}
 
-        #container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            flex: 1;
-        }
+		#container {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			flex: 1;
+		}
 
-        #editorContainer {
-            display: flex;
-            align-items: stretch;
-            height: 100%;
-            width: 100%;
-        }
+		#editorContainer {
+			display: flex;
+			align-items: stretch;
+			height: 100%;
+			width: 100%;
+		}
 
-        #lineNumbers {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            padding: 1em;
-            box-sizing: border-box;
-            background-color: #1e2127;
-            color: #5c6370;
-            user-select: none;
-            border-right: 1px solid #444c56;
-            white-space: pre-wrap;
-            font-size: var(--global-font-size);
-            line-height: var(--global-line-height);
-        }
+		#lineNumbers {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-end;
+			padding: 1em;
+			box-sizing: border-box;
+			background-color: #1e2127;
+			color: #5c6370;
+			user-select: none;
+			border-right: 1px solid #444c56;
+			white-space: pre-wrap;
+			font-size: var(--global-font-size);
+			line-height: var(--global-line-height);
+		}
 
-        #inputText {
-            flex: 1;
-            width: 100%;
-            padding: 1em;
-            box-sizing: border-box;
-            border: none;
-            font-size: calc(var(--global-font-size) - 1.5px);
-            line-height: var(--global-line-height);
-            outline: none;
-            resize: none;
-            background-color: #1e2127;
-            color: #abb2bf;
-            margin: 0;
-            text-size-adjust: none;
-        }
+		#inputText {
+			flex: 1;
+			width: 100%;
+			padding: 1em;
+			box-sizing: border-box;
+			border: none;
+			font-size: calc(var(--global-font-size) - 1.5px);
+			line-height: var(--global-line-height);
+			outline: none;
+			resize: none;
+			background-color: #1e2127;
+			color: #abb2bf;
+			margin: 0;
+			text-size-adjust: none;
+		}
 
-        #title {
-            margin: 1em;
-        }
+		#title {
+			margin: 1em;
+		}
 
-        button {
-            padding: 10px;
-            background-color: #61afef;
-            color: #282c34;
-            font-size: 16px;
-            border: none;
-            cursor: pointer;
-            outline: none;
-            border-radius: 0.3em;
-        }
+		button {
+			padding: 10px;
+			background-color: #61afef;
+			color: #282c34;
+			font-size: 16px;
+			border: none;
+			cursor: pointer;
+			outline: none;
+			border-radius: 0.3em;
+		}
 
-        button:hover {
-            background-color: #528bff;
-        }
+		button:hover {
+			background-color: #528bff;
+		}
 
-        #output {
-            padding: 20px;
-            white-space: pre-wrap;
-            font-size: 16px;
-            background-color: #2f3238;
-            color: #abb2bf;
-            border-top: 1px solid #444c56;
-        }
+		#output {
+			padding: 20px;
+			white-space: pre-wrap;
+			font-size: 16px;
+			background-color: #2f3238;
+			color: #abb2bf;
+			border-top: 1px solid #444c56;
+		}
 
-        .copy-message {
-            position: absolute;
-            background-color: #4CAF50;
-            color: #ffffff;
-            padding: 8px;
-            border-radius: 4px;
-            z-index: 9999;
-        }
-    </style>
+		.copy-message {
+			position: absolute;
+			background-color: #4CAF50;
+			color: #ffffff;
+			padding: 8px;
+			border-radius: 4px;
+			z-index: 9999;
+		}
+	</style>
 </head>
 <body>
-    <div id="container">
-        <nav>
-            <strong id="title">The Tau Playground</strong>
-            <button onclick="runCode()">Run</button>
-            <button onclick="copyURL(this)">Share</button>
-        </nav>
-        <hr style="width: 100%; margin: 0; border: 1px solid #444c56;">
-        <div id="editorContainer">
-            <div id="lineNumbers">1</div>
-            <textarea id="inputText" placeholder="Enter your code here..." autofocus oninput="updateLineNumbers()"></textarea>
-        </div>
-    </div>
-    <div id="output"></div>
+	<div id="container">
+		<nav>
+			<strong id="title">The Tau Playground</strong>
+			<button onclick="runCode()">Run</button>
+			<button onclick="copyURL(this)">Share</button>
+		</nav>
+		<hr style="width: 100%; margin: 0; border: 1px solid #444c56;">
+		<div id="editorContainer">
+			<div id="lineNumbers">1</div>
+			<textarea id="inputText" placeholder="Enter your code here..." autofocus oninput="updateLineNumbers()"></textarea>
+		</div>
+	</div>
+	<div id="output"></div>
 
-    <script src="wasm_exec.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lz-string@1.4.4/libs/lz-string.min.js"></script>
-    <script>
-        const go = new Go();
-        WebAssembly.instantiateStreaming(fetch("play.wasm"), go.importObject)
-            .then((result) => go.run(result.instance));
+	<script src="wasm_exec.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/lz-string@1.4.4/libs/lz-string.min.js"></script>
+	<script>
+		const go = new Go();
+		WebAssembly.instantiateStreaming(fetch("play.wasm"), go.importObject)
+			.then((result) => go.run(result.instance));
 
-        function useDisplay(elemID) {
-            const elem = document.getElementById(elemID);
-            return (text) => elem.textContent = text
-        }
+		function useDisplay(elemID) {
+			const elem = document.getElementById(elemID);
+			return (text) => elem.textContent = text
+		}
 
-        const displayOutput = useDisplay("output");
-        const displayLineNumbers = useDisplay("lineNumbers");
-        const setCode = (code) => document.getElementById('inputText').value = code;
-        const encode = (inputString) => encodeURIComponent(LZString.compressToBase64(inputString));
-        const decode = (encodedString) => LZString.decompressFromBase64(decodeURIComponent(encodedString));
+		const displayOutput = useDisplay("output");
+		const displayLineNumbers = useDisplay("lineNumbers");
+		const setCode = (code) => document.getElementById('inputText').value = code;
 
-        function checkShared() {
-            const queries = window.location.search;
+		// Returns the current address.
+		const addr = () => {
+			const protocol = window.location.protocol;
+			const hostname = window.location.hostname;
+			const port = window.location.port.length !== 0 ? `:${window.location.port}` : "";
+			const path = window.location.pathname;
 
-            if (queries.length !== 0) {
-                const params = new URLSearchParams(queries);
-                if (params.has("cnt")) {
-                    setCode(decode(params.get("cnt")));
-                }
-            }
-        }
+			return `${protocol}//${hostname}${port}${path}`
+		}
 
-        checkShared();
-        updateLineNumbers();
+		// Returns the share address with the given ID.
+		const addrId = (id) => addr() + `?id=${id}`
 
-        // Function to run the code
-        function runCode() {
-            const inputText = document.getElementById('inputText').value;
-            displayOutput(runTau(inputText));
-        }
+		async function getContent(contentId) {
+			try {
+				const response = await fetch(addr() + `/p/${contentId}`);
+				if (!response.ok) {
+					throw new Error('Network response was not ok ' + response.statusText);
+				}
+				const text = await response.text();
+				console.log(text);  // Log the text response
+				return text;  // Return the text response
+			} catch (error) {
+				console.error('Fetch error:', error);
+				return "";
+			}
+		}
 
-        function copyURL(button) {
-            const protocol = window.location.protocol;
-            const hostname = window.location.hostname;
-            const port = window.location.port.length !== 0 ? `:${window.location.port}` : "";
-            const path = window.location.pathname;
-            const encoded = encode(document.getElementById('inputText').value);
-            navigator.clipboard.writeText(`${protocol}//${hostname}${port}${path}?cnt=${encoded}`)
-                .then(() => {
-                  // Create and style the message element
-                    var copyMessage = Object.assign(document.createElement("div"), {
-                        textContent: "URL copied to clipboard!",
-                        className: "copy-message",
-                        style: `
-                          position: absolute;
-                          background-color: #4CAF50;
-                          color: #ffffff;
-                          padding: 8px;
-                          border-radius: 4px;
-                          z-index: 9999;
-                          left: ${button.getBoundingClientRect().right}px;
-                          top: ${button.getBoundingClientRect().top}px;
-                        `,
-                    });
+		// Puts the text content to the server and returns its response if ok.
+		function putContent(url, text) {
+			return fetch(url, {
+				method: 'PUT',
+				headers: {'Content-Type': 'text/plain'},
+				body: text
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('could not save code: ' + response.statusText);
+				}
+					return response.text();  // Assuming the server returns a plain text response
+				})
+			.catch(error => {
+				console.error('could not save code:', error);
+				throw error;  // Re-throw the error to be handled by the caller
+			});
+		}
 
-                    // Append the message element to the document
-                    document.body.appendChild(copyMessage);
+		function checkShared() {
+			const queries = window.location.search;
 
-                    // Hide the message after 2 seconds
-                    setTimeout(() => document.body.removeChild(copyMessage), 2000);
-            });
-        }
+			if (queries.length !== 0) {
+				const params = new URLSearchParams(queries);
+				if (params.has("id")) {
+					getContent(params.get("id")).then(code => setCode(code));
+				}
+			}
+		}
 
-        // Function to update line numbers
-        function updateLineNumbers() {
-            const inputText = document.getElementById('inputText');
-            const lineCount = inputText.value.split('\n').length;
-            displayLineNumbers(Array.from({ length: lineCount }, (_, index) => index + 1).join('\n'))
-        }
+		// Function to update line numbers
+		function updateLineNumbers() {
+			const inputText = document.getElementById('inputText');
+			const lineCount = inputText.value.split('\n').length;
+			displayLineNumbers(Array.from({ length: lineCount }, (_, index) => index + 1).join('\n'))
+		}
 
-        const textarea = document.getElementById('inputText');
-        textarea.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.key === 'Enter') {
-                e.preventDefault();
-                runCode();
-            } else if (e.key === 'Tab') {
-                e.preventDefault();
-                // Insert a tab character at the current cursor position
-                const start = this.selectionStart;
-                const end = this.selectionEnd;
-                const currentValue = this.value;
-                this.value = currentValue.substring(0, start) + '\t' + currentValue.substring(end);
-                this.selectionStart = this.selectionEnd = start + 1;
-                updateLineNumbers(); // Update line numbers after inserting tab
-            }
-        });
-    </script>
+		checkShared();
+		updateLineNumbers();
+
+		// Function to run the code
+		function runCode() {
+			const inputText = document.getElementById('inputText').value;
+			displayOutput(runTau(inputText));
+		}
+
+		function okmsg(button, text) {
+			// Create and style the message element
+			var msg = Object.assign(document.createElement("div"), {
+				textContent: text,
+				className: "copy-message",
+				style: `
+					position: absolute;
+					background-color: #4CAF50;
+					color: #ffffff;
+					padding: 8px;
+					border-radius: 4px;
+					z-index: 9999;
+					left: ${button.getBoundingClientRect().right}px;
+					top: ${button.getBoundingClientRect().top}px;
+				`,
+			});
+
+			// Append the message element to the document
+			document.body.appendChild(msg);
+			// Hide the message after 2 seconds
+			setTimeout(() => document.body.removeChild(msg), 2000);
+		}
+
+		function errmsg(button, text) {
+			// Create and style the message element
+			var msg = Object.assign(document.createElement("div"), {
+				textContent: text,
+				className: "copy-message",
+				style: `
+					position: absolute;
+					background-color: #D32F2F;
+					color: #ffffff;
+					padding: 8px;
+					border-radius: 4px;
+					z-index: 9999;
+					left: ${button.getBoundingClientRect().right}px;
+					top: ${button.getBoundingClientRect().top}px;
+				`,
+			});
+
+			// Append the message element to the document
+			document.body.appendChild(msg);
+			// Hide the message after 2 seconds
+			setTimeout(() => document.body.removeChild(msg), 2000);
+		}
+
+		function copyURL(button) {
+			putContent(addr() + "/p", document.getElementById('inputText').value)
+				.then(id => {
+					var url = addrId(id);
+
+					navigator.clipboard.writeText(url)
+						.then(() => {
+							okmsg(button, "URL copied to clipboard!");
+							window.location.replace(url);
+						})
+						.catch(error => {
+							errmsg("An error occurred!");
+							console.error(button, "copyURL", error);
+						});
+				});
+		}
+
+		const textarea = document.getElementById('inputText');
+		textarea.addEventListener('keydown', function(e) {
+			if (e.ctrlKey && e.key === 'Enter') {
+				e.preventDefault();
+				runCode();
+			} else if (e.key === 'Tab') {
+				e.preventDefault();
+				// Insert a tab character at the current cursor position
+				const start = this.selectionStart;
+				const end = this.selectionEnd;
+				const currentValue = this.value;
+				this.value = currentValue.substring(0, start) + '\t' + currentValue.substring(end);
+				this.selectionStart = this.selectionEnd = start + 1;
+				updateLineNumbers(); // Update line numbers after inserting tab
+			}
+		});
+	</script>
 </body>
 </html>
