@@ -146,11 +146,13 @@ func initDB() {
 }
 
 func main() {
-	port := *flag.String("p", ":8080", "The port TauPlay will listen to.")
+	var port string
+
+	flag.StringVar(&port, "p", ":8080", "The port TauPlay will listen to.")
 	flag.Parse()
 
 	if !strings.HasPrefix(port, ":") {
-		port = ":" + port
+		port = ":" + (port)
 	}
 
 	initDB()
